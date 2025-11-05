@@ -1,90 +1,51 @@
 #include <stdio.h>
-#include <stdlib.h>
+#define TAMANHO_FILA 30
 
-struct cel{
-    int conteudo;
-    struct cel *seg;
-};
-
-typedef struct cel celula;
-
-void insira(int y, celula *lst);
-void imprime(celula *lst);
-void remove_tudo(celula *lst);
+void enfileire(int vetor[], int *t, int *s, int x);
+int desenfileire(int vetor[], int *s, int *t);
+int vazia(int *s, int *t);
 
 int main(){
+    int vetor[TAMANHO_FILA];
+    int s, t;
 
-    celula c, *lst;
+    s = t = 0;
 
-    c.seg = NULL;
-    lst = &c;
+    enfileire(vetor, &t, &s, 13);
+    enfileire(vetor, &t, &s,16);
+    desenfileire(vetor, &s, &t);
 
-    insira(50, lst);
-    insira(10, lst);
-    insira(20, lst);
-    insira(30, lst);
-    insira(7, lst);
-
-    imprime(lst);
-
-    remove_tudo(lst);
-
-    imprime(lst);
-
+    enfileire(vetor, &t, &s, 17);
 
 
     return 0;
 }
 
-
-void insira(int y, celula *lst){
-    celula  *nova;
-
-    nova = (celula *) malloc(sizeof(celula));
-
-    nova->conteudo = y;
-    nova->seg = lst->seg;
-    lst->seg = nova;
-
-}   
-
-void imprime(celula *lst){
-    celula *p = lst->seg;
-
-    while(p != NULL){
-        printf("Conteudo: %d\n", p->conteudo);
-        p = p->seg;
-    }
-}
-
-
-void remove_tudo(celula *lst){
-
-    celula *p = lst->seg;
-    celula *prox;
-
-    while(p != NULL){
-        prox = p->seg;
-        free(p);
-        p = prox;
-    }
-
-    lst->seg = NULL;
-}
-
-
-
-void remove_tudoR(celula *lst){
-
-
-    if(lst->seg == NULL){
-        printf("acabou");
+void enfileire(int vetor[], int *t, int *s,  int x){
+    
+    if((*t + 1) % TAMANHO_FILA == *s){
+        printf("Fim da lista. Overflow\n");
         return;
     }
 
-    celula *p = lst->seg;
-    remove_tudoR(p);
-    free(p);
+    vetor[*t] = x;
+    *t = (*t + 1) % TAMANHO_FILA;
 
-    lst->seg = NULL;
+}
+
+int desenfileire(int vetor[], int *s, int *t){
+
+    if(vazia(s, t)){
+        printf("Fila vazia.\n");
+        return -1;
+    }
+
+    int x = vetor[*s];
+    *s = (*s + 1) % TAMANHO_FILA;
+
+    return x;
+}
+
+int vazia(int *s, int *t){
+    return (*s == *t);
 }

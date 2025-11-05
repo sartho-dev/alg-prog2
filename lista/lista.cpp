@@ -1,51 +1,90 @@
 #include <stdio.h>
-#define TAMANHO_FILA 30
+#include <stdlib.h>
 
-void enfileire(int vetor[], int *t, int *s, int x);
-int desenfileire(int vetor[], int *s, int *t);
-int vazia(int *s, int *t);
+struct cel{
+    int conteudo;
+    struct cel *seg;
+};
+
+typedef struct cel celula;
+
+void insira(int y, celula *lst);
+void imprime(celula *lst);
+void remove_tudo(celula *lst);
 
 int main(){
-    int vetor[TAMANHO_FILA];
-    int s, t;
 
-    s = t = 0;
+    celula c, *lst;
 
-    enfileire(vetor, &t, &s, 13);
-    enfileire(vetor, &t, &s,16);
-    desenfileire(vetor, &s, &t);
+    c.seg = NULL;
+    lst = &c;
 
-    enfileire(vetor, &t, &s, 17);
+    insira(50, lst);
+    insira(10, lst);
+    insira(20, lst);
+    insira(30, lst);
+    insira(7, lst);
+
+    imprime(lst);
+
+    remove_tudo(lst);
+
+    imprime(lst);
+
 
 
     return 0;
 }
 
-void enfileire(int vetor[], int *t, int *s,  int x){
-    
-    if((*t + 1) % TAMANHO_FILA == *s){
-        printf("Fim da lista. Overflow\n");
+
+void insira(int y, celula *lst){
+    celula  *nova;
+
+    nova = (celula *) malloc(sizeof(celula));
+
+    nova->conteudo = y;
+    nova->seg = lst->seg;
+    lst->seg = nova;
+
+}   
+
+void imprime(celula *lst){
+    celula *p = lst->seg;
+
+    while(p != NULL){
+        printf("Conteudo: %d\n", p->conteudo);
+        p = p->seg;
+    }
+}
+
+
+void remove_tudo(celula *lst){
+
+    celula *p = lst->seg;
+    celula *prox;
+
+    while(p != NULL){
+        prox = p->seg;
+        free(p);
+        p = prox;
+    }
+
+    lst->seg = NULL;
+}
+
+
+
+void remove_tudoR(celula *lst){
+
+
+    if(lst->seg == NULL){
+        printf("acabou");
         return;
     }
 
-    vetor[*t] = x;
-    *t = (*t + 1) % TAMANHO_FILA;
+    celula *p = lst->seg;
+    remove_tudoR(p);
+    free(p);
 
-}
-
-int desenfileire(int vetor[], int *s, int *t){
-
-    if(vazia(s, t)){
-        printf("Fila vazia.\n");
-        return -1;
-    }
-
-    int x = vetor[*s];
-    *s = (*s + 1) % TAMANHO_FILA;
-
-    return x;
-}
-
-int vazia(int *s, int *t){
-    return (*s == *t);
+    lst->seg = NULL;
 }
