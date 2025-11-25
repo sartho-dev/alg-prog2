@@ -138,6 +138,30 @@ void selection_sort(celula *lst){
 
 }
 
+void insertion_sort(celula *lst){
+
+    celula *atual = lst->prox->prox;
+
+    
+
+    while (atual != NULL){
+
+        celula *p = atual;
+
+        while(p->ant != NULL && p->valor < p->ant->valor){
+            int aux = p->valor;
+            p->valor = p->ant->valor;
+            p->ant->valor = aux;
+
+            p = p->ant;
+        }
+
+        atual = atual->prox;
+    }
+
+
+}
+
 void quick_sort(celula *lst){
     
 }
@@ -155,9 +179,13 @@ int main() {
     enfileire(&lst, 8);
     enfileire(&lst, 7);
 
+    printf("Fila atual:\n");
+    mostrar_iterativa(&lst);
+
+    insertion_sort(&lst);
     //bubble_sort(&lst);
 
-    printf("Fila atual:\n");
+    printf("\nFila Depois:\n");
     mostrar_iterativa(&lst);
 
     printf("\nDesenfileirado: %d\n", desenfileire(&lst));
